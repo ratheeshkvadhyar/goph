@@ -59,11 +59,15 @@ func New(user string, addr string, auth Auth) (c *Client, err error) {
 // PLEASE AVOID USING THIS, UNLESS YOU KNOW WHAT ARE YOU DOING!
 // if there a "man in the middle proxy", this can harm you!
 // You can add the key to know hosts and use New() func instead!
-func NewUnknown(user string, addr string, auth Auth) (*Client, error) {
+func NewUnknown(user string, addr string, port string, auth Auth) (*Client, error) {
+	p, err := strconv.Atoi(port)
+	if err != nil {
+		return nil, err
+	}
 	return NewConn(&Config{
 		User:     user,
 		Addr:     addr,
-		Port:     22,
+		Port:     uint(p),
 		Auth:     auth,
 		Timeout:  DefaultTimeout,
 		Callback: ssh.InsecureIgnoreHostKey(),
